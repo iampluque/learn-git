@@ -51,7 +51,7 @@ cat << EOF
     git diff --name-only --diff-filter=U
 
 3. edit your file manually to fix the conflicts and save it (indeed)
-4. then, run the following. Most likely win will be the `git rebase` text editor. Type `:wq` to write commit comment & exit vim.
+4. then, run the following. Most likely win will be the git rebase text editor. Type :wq to write commit comment & exit vim.
     
     git add .
     git rebase --continue
