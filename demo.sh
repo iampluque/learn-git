@@ -1,5 +1,3 @@
-sessionsDir=./sessions
-
 init_session() {
     git init &> /dev/null
     #wireing: do not take note
@@ -57,6 +55,7 @@ echo
 EOF
 }
 
+sessionsDir=./sessions
 session=$1 #$(get_session $@)
 configFile=$sessionsDir/$session.yml
 

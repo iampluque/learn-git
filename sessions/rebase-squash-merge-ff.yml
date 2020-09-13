@@ -1,0 +1,58 @@
+intro: |
+
+  Rebase & Squash:
+      Let's you rebase and lean your history before merging.
+      
+  The following session will result in...
+
+  1.  A base commit on master
+  2.  A first feature from master
+  3.  A second feature from master modifying the same file than the first feature
+  4.  Merge of the first feature in master
+  5.  Merge of the second feature in master
+steps:
+- title: readme.md creation to master
+  commands: |
+    echo "2020 Release Notes" >> readme.md
+    git add . &> /dev/null
+    git commit -am "release notes" &> /dev/null
+  outputs: |
+    mastersHead=$(git rev-parse HEAD)
+- title: Deving feature 1
+  commands: |
+    git checkout -b feature-1 $mastersHead &> /dev/null
+    { echo "2019 Release Notes"; cat readme.md; } > temp && mv temp readme.md
+    git commit -am "modifications from feature 1" &> /dev/null
+    echo -n "Random changes" >> feature1.random.file
+    git add . &> /dev/null
+    git commit -am "random modifications from feature 1" &> /dev/null
+- title: Adding random file to master
+  commands: |
+    git checkout master &> /dev/null
+    echo -n "Random changes" >> random.file
+    git add . &> /dev/null
+    git commit -am "random modifications from master" &> /dev/null
+- title: Merge feature 1 to master
+  commands: |
+    git checkout feature-1 &> /dev/null
+        cat << EOF
+
+        Now, 
+
+        1.  Open another console from the current console
+        2.  Run the following. 
+            
+            cd demo
+            git rebase --interactive master
+
+        5.  A list of commits since the upstream will be shown in VI in the following format: <verb> <commit's sha> <commit message>.
+            Press i to enter edition mode.
+            From the second commit to the last, replace pick verb by squash (or it's short version s).
+        6.  When your done, press Esc to exit edition mode.
+            Then type :wq to write content and quit vi.
+        7.  A new vi will open so you can add you commit message. Insert it at the first line (e.g.: Adding feature 1). Save and quit.
+        8.  When your ready, exit the previously created console and press any key, will resume the work!
+    EOF
+    read
+    git checkout master &> /dev/null
+    git merge feature-1 &> /dev/null

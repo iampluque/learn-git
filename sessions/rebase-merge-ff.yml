@@ -1,0 +1,55 @@
+intro: |
+
+  Rebase:
+      Lets you update your upstream reference commit to a specific commit (e.g.: HEAD).
+      The process will move forward all the commit you did on your branch up to the specific commit.
+      
+  The following session will result in...
+
+  1.  A base commit on master
+  2.  A first feature from master
+  3.  A second feature from master modifying the same file than the first feature
+  4.  Merge of the first feature in master
+  5.  Merge of the second feature in master
+steps:
+- title: readme.md creation to master
+  commands: |
+    echo "2020 Release Notes" >> readme.md
+    git add . &> /dev/null
+    git commit -am "release notes" &> /dev/null
+  outputs: |
+    mastersHead=$(git rev-parse HEAD)
+- title: Deving feature 1
+  commands: |
+    git checkout -b feature-1 $mastersHead &> /dev/null
+    { echo "2019 Release Notes"; cat readme.md; } > temp && mv temp readme.md
+    git commit -am "modifications from feature 1" &> /dev/null
+    echo -n "Random changes" >> feature1.random.file
+    git add . &> /dev/null
+    git commit -am "random modifications from feature 1" &> /dev/null
+- title: Deving feature 2
+  commands: |
+    git checkout -b feature-2 $mastersHead &> /dev/null
+    echo -n "2021 Release Notes" >> readme.md
+    git commit -am "modifications from feature 2" &> /dev/null
+    echo -n "Random changes" >> feature2.random.file
+    git add . &> /dev/null
+    git commit -am "random modifications from feature 2" &> /dev/null
+- title: Adding random file to master
+  commands: |
+    git checkout master &> /dev/null
+    echo -n "Random changes" >> random.file
+    git add . &> /dev/null
+    git commit -am "random modifications from master" &> /dev/null
+- title: Merge feature 1 to master
+  commands: |
+    git checkout feature-1 &> /dev/null
+    git rebase master &> /dev/null
+    git checkout master &> /dev/null
+    git merge feature-1 &> /dev/null
+- title: Merge feature 2 to master
+  commands: |
+    git checkout feature-2 &> /dev/null
+    git rebase master &> /dev/null
+    git checkout master &> /dev/null
+    git merge feature-2 &> /dev/null
