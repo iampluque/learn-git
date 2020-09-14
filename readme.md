@@ -9,8 +9,12 @@
 
 # Advice
 - Rebase everyday
-- do not merge before rebasing
-- fix conflicts in your branch
-- short-lived branches
-- small module
-- communicate
+- Always Rebase before merging (Fix conflicts in your branch)
+- Set your git global settings to ff-only to enforce Rebase behavior
+  ```.gitconfig
+  [merge]
+    ff = only
+  ```
+- Work with Short-Lived branches
+- Code Small Module
+- Communicate
