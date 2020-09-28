@@ -10,6 +10,8 @@ intro: |
   3.  A second feature from master modifying the same file than the first feature
   4.  Merge of the first feature in master
   5.  Merge of the second feature in master
+specialGitConfig: |
+  git config merge.ff  #&> /dev/null
 steps:
 - title: readme.md creation to master
   commands: |
@@ -23,11 +25,17 @@ steps:
     git checkout -b feature-1 $mastersHead &> /dev/null
     { echo "2019 Release Notes"; cat readme.md; } > temp && mv temp readme.md
     git commit -am "modifications from feature 1" &> /dev/null
+    echo -n "Random changes" >> feature1.random.file
+    git add . &> /dev/null
+    git commit -am "random modifications from feature 1" &> /dev/null
 - title: Deving feature 2
   commands: |
     git checkout -b feature-2 $mastersHead &> /dev/null
     echo -n "2021 Release Notes" >> readme.md
     git commit -am "modifications from feature 2" &> /dev/null
+    echo -n "Random changes" >> feature2.random.file
+    git add . &> /dev/null
+    git commit -am "random modifications from feature 2" &> /dev/null
 - title: Adding random file to master
   commands: |
     git checkout master &> /dev/null

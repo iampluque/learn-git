@@ -33,6 +33,11 @@ list_sessions() {
 # }
 copy_runfile() {
     cat <<"EOF" > $1
+GIT_CONFIG_NOSYSTEM=1
+GIT_ATTR_NOSYSTEM=1
+HOME=./fake
+XDG_CONFIG_HOME=./fake
+
 echo "$(yq r config.yml intro)"
 init_session
 repo_state
