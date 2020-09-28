@@ -33,7 +33,7 @@ list_sessions() {
 # }
 copy_runfile() {
     cat <<"EOF" > $1
-GIT_CONFIG_NOSYSTEM=1
+GIT_CONFIG_NOSYSTEM=1 #https://www.mail-archive.com/bug-guix@gnu.org/msg17750.html
 GIT_ATTR_NOSYSTEM=1
 HOME=./fake
 XDG_CONFIG_HOME=./fake
