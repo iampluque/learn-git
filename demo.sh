@@ -1,7 +1,8 @@
 init_session() {
     git init &> /dev/null
     #wireing: do not take note
-    git config alias.adog "log --all --decorate --oneline --graph"  &> /dev/null
+    git config alias.adog "dog --all"  &> /dev/null
+    git config alias.dog "log --decorate --oneline --graph"  &> /dev/null
     cat <<EOF > .gitignore
 run.sh
 config.yml

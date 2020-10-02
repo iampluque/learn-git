@@ -10,8 +10,8 @@ intro: |
   3.  A second feature from master modifying the same file than the first feature
   4.  Merge of the first feature in master
   5.  Merge of the second feature in master
-specialGitConfig: |
-  git config merge.ff  #&> /dev/null
+# specialGitConfig: |
+#   git config merge.ff  #&> /dev/null
 steps:
 - title: readme.md creation to master
   commands: |
