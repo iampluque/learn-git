@@ -1,0 +1,59 @@
+intro: |
+
+  Merge:
+      Merge merges 2 branches together. If fast-forward is possible, no merge commit are created, otherwise, a new merge commit is created.
+
+  The following session will result in...
+
+  1.  A base commit on master
+  2.  A first feature from master
+  3.  A second feature from master modifying the same file than the first feature
+  4.  Merge of the first feature in master
+  5.  Merge of the second feature in master
+# specialGitConfig: |
+#   git config merge.ff  #
+steps:
+- title: readme.md creation to master
+  fastTrack: true
+  commands: |
+    echo "2020 Release Notes" >> readme.md
+    git add . 
+    git commit -am "release notes" 
+  outputs: |
+    mastersHead=$(git rev-parse HEAD)
+- title: Deving feature 1
+  fastTrack: true
+  commands: |
+    git checkout -b feature-1 $mastersHead 
+    { echo "2019 Release Notes"; cat readme.md; } > temp && mv temp readme.md
+    git commit -am "modifications from feature 1" 
+    echo -n "Random changes" >> feature1.random.file
+    git add . 
+    git commit -am "random modifications from feature 1" 
+- title: Deving feature 2
+  fastTrack: true
+  commands: |
+    git checkout -b feature-2 $mastersHead 
+    echo -n "2021 Release Notes" >> readme.md
+    git commit -am "modifications from feature 2" 
+    echo -n "Random changes" >> feature2.random.file
+    git add . 
+    git commit -am "random modifications from feature 2" 
+# - title: Adding random file to master
+#   commands: |
+#     git checkout master 
+#     echo -n "Random changes" >> random.file
+#     git add . 
+#     git commit -am "random modifications" 
+- title: Merge feature 1 to master
+  commands: |
+    git checkout feature-1
+    git rebase master
+    git checkout master 
+    git merge --ff-only feature-1 
+- title: Merge feature 2 to master
+  commands: |
+    git checkout feature-2
+    git rebase master
+    git checkout master 
+    git merge --ff-only feature-2 

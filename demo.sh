@@ -1,3 +1,6 @@
+session=$1 #$(get_session $@)
+deleteOption=$2 #$(get_session $@)
+
 init_session() {
     git init &> /dev/null
     #wireing: do not take note
@@ -46,9 +49,16 @@ repo_state
 stepsCount=$(yq r config.yml --length steps)
 for (( step = 0; step <= $stepsCount - 1; step++ ))
 do  
-    proceed
+    fastTrack=$(yq r config.yml steps[$step].fastTrack)
+    [[ ! $fastTrack ]] && proceed;
 
-    eval "$(yq r config.yml steps[$step].commands)"
+    silent=$(yq r config.yml steps[$step].silent)
+    
+    if $silent; then
+        eval "$(yq r config.yml steps[$step].commands)" &> /dev/null
+    else
+        eval "$(yq r config.yml steps[$step].commands)"
+    fi
     eval "$(yq r config.yml steps[$step].outputs)"
 
     echo "$(yq r config.yml steps[$step].title) done!"
@@ -61,8 +71,9 @@ echo
 EOF
 }
 
+[[ $deleteOption ]] && rm -rf demo*/
+
 sessionsDir=./sessions
-session=$1 #$(get_session $@)
 configFile=$sessionsDir/$session.yml
 
 if ! test -f "$configFile"; then
@@ -73,10 +84,11 @@ if ! test -f "$configFile"; then
     return 1
 fi
 
-rm -rf demo
-mkdir demo
+demoFolder=demo$RANDOM
+mkdir $demoFolder
 
-cp $configFile ./demo/config.yml
-copy_runfile ./demo/run.sh
+cp $configFile ./$demoFolder/config.yml
+copy_runfile ./$demoFolder/run.sh
 
-(cd ./demo && . run.sh)
+echo running in $demoFolder
+(cd ./$demoFolder && . run.sh)
